@@ -1,16 +1,16 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: krakend
+  name: kibana
 spec:
   rules:
-    - host: krakend.reshout.com
+    - host: kibana.reshout.com
       http:
         paths:
           - backend:
               service:
-                name: krakend
+                name: kibana
                 port:
-                  number: 8080
+                  number: 5601
             path: /
             pathType: Prefix

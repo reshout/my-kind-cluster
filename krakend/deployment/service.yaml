@@ -1,8 +1,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: krakend-service
-  namespace: krakend
+  name: krakend
 spec:
   type: ClusterIP
   ports:
