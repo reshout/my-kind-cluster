@@ -3,16 +3,15 @@ kind: Ingress
 metadata:
   name: krakend-ingress
   namespace: krakend
-  annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /
 spec:
   rules:
-    - http:
+    - host: krakend.reshout.com
+      http:
         paths:
           - backend:
               service:
                 name: krakend-service
                 port:
                   number: 8080
-            path: /krakend
+            path: /
             pathType: Prefix
