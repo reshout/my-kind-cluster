@@ -1,0 +1,13 @@
+{
+  "$schema": "https://www.krakend.io/schema/v3.json",
+  "version": 3,
+  "endpoints": [],
+  "extra_config": {
+    "router": {
+      "@comment": "The health endpoint checks do not show in the logs",
+      "logger_skip_paths": [
+        "/__health"
+      ]
+    }
+  }
+}

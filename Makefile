@@ -1,11 +1,12 @@
-.PHONY: install uninstall create_cluster deploy_metrics_server deploy_ingress_nginx deploy_efk deploy_krakend delete_cluster
-
 install: create_cluster deploy_metrics_server deploy_ingress_nginx deploy_efk deploy_krakend
 
 uninstall: delete_cluster
 
 create_cluster:
 	kind create cluster --name=kind --config=kind/config.yaml
+
+delete_cluster:
+	kind delete cluster --name=kind
 
 deploy_metrics_server:
 	kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
@@ -22,7 +23,14 @@ deploy_efk:
 
 deploy_krakend:
 	kubectl create namespace apigw
+	kubectl -n apigw create configmap krakend --from-file=krakend/config/krakend.json
 	kubectl -n apigw apply -f krakend/deployment
 
-delete_cluster:
-	kind delete cluster --name=kind
+undeploy_krakend:
+	kubectl -n apigw delete -f krakend/deployment
+	kubectl -n apigw delete configmap krakend
+	kubectl delete namespace apigw
+
+reload_krakend: undeploy_krakend deploy_krakend
+	kubectl -n apigw wait pod --selector=app=krakend --for=condition=ready --timeout=30s
+	kubectl -n apigw logs -f --selector=app=krakend
